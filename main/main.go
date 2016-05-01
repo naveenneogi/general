@@ -13,6 +13,7 @@ import (
 	"github.com/dghubble/oauth1"
 	"io/ioutil"
 	"encoding/json"
+	"github.com/bitly/go-simplejson"
 )
 
 func main() {
@@ -52,20 +53,34 @@ func main() {
 	// }
 	//
 	path := "https://api.twitter.com/1.1/statuses/home_timeline.json?count=1&since_id=726572231317401602"
-	resp, _ := httpClient.Get(path)
+	resp, err := httpClient.Get(path)
+	if err != nil {
+		panic(err.Error())
+	}
 	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err.Error())
+	}
 	fmt.Printf("Raw Response Body:\n%v\n", string(body))
+
+
 	//url := body["entities"]["urls"]["display_url"]
 	//fmt.Printf("Raw Response Url:\n%v\n", url)
 
 	//byt := []byte(`{"num":6.13,"strs":["a","b"]}`)
-	byt := []byte(body)
-	var dat map[string]interface{}
-	if err := json.Unmarshal(byt, &dat); err != nil {
+	//var dat map[string]interface{}
+	//byt := []byte(body)
+	val := new(struct {
+		Name   string `json:"name"`
+		Params *Json  `json:"params"`
+	})
+
+
+	if err := json.Unmarshal([]byte(body), val); err != nil {
 		panic(err)
 	}
-	fmt.Println(dat)
+	fmt.Println(val)
 	//num := dat["num"].(float64)
 	//fmt.Println(num)
 
