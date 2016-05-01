@@ -35,7 +35,7 @@ import (
 	"github.com/dghubble/oauth1"
 	"io/ioutil"
 	"encoding/json"
-	"github.com/bitly/go-simplejson"
+	//"github.com/bitly/go-simplejson"
 )
 
 func main() {
@@ -76,18 +76,21 @@ func main() {
 	//fmt.Printf("Raw Response Url:\n%v\n", url)
 
 	//byt := []byte(`{"num":6.13,"strs":["a","b"]}`)
-	//var dat map[string]interface{}
+	var dat map[string]interface{}
 	//byt := []byte(body)
+	/*
 	val := new(struct {
 		Name   string `json:"name"`
 		Params *Json  `json:"params"`
 	})
+	*/
 
 
-	if err := json.Unmarshal([]byte(body), val); err != nil {
+	// json parse FAILing here
+	if err := json.Unmarshal([]byte(body), dat); err != nil {
 		panic(err)
 	}
-	fmt.Println(val)
+	fmt.Println(dat)
 	//num := dat["num"].(float64)
 	//fmt.Println(num)
 
