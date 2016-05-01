@@ -1,5 +1,26 @@
 package main
 
+//
+// NOTE: Half baked, or still not baked at all
+//
+// some initial thoughts...
+//
+// deamon:
+// do
+// 	get upto 100 tweets since the last $since_id we processed
+// 	update $since_id to the last max id we processed from the current batch
+// repeat
+//
+// process(tweet) {
+// 	for each tweet parse url
+//		figure out the actual url from the shortened url
+// 		update to a temp hash[urls]
+//	endfor
+// 	update the current set of hash[urls] into the already processed {user, urls}
+// }
+//
+
+
 import (
 	"flag"
 	"fmt"
@@ -37,21 +58,6 @@ func main() {
 	// OAuth1 http.Client will automatically authorize Requests
 	httpClient := config.Client(oauth1.NoContext, token)
 
-	//
-	// deamon:
-	// do
-	// 	get upto 100 tweets since the last $since_id we processed
-	// 	update $since_id to the last max id we processed from the current batch
-	// repeat
-	//
-	// process(tweet) {
-	// 	for each tweet parse url
-	//		figure out the actual url from the shortened url
-	// 		update to a temp hash[urls]
-	//	endfor
-	// 	update the current set of hash[urls] into the already processed {user, urls}
-	// }
-	//
 	path := "https://api.twitter.com/1.1/statuses/home_timeline.json?count=1&since_id=726572231317401602"
 	resp, err := httpClient.Get(path)
 	if err != nil {
