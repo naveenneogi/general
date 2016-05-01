@@ -7,6 +7,7 @@ package main
 //
 // deamon:
 // do
+//	api = "https://api.twitter.com/1.1/statuses/home_timeline.json?count=1&since_id=726572231317401602"
 // 	get upto 100 tweets since the last $since_id we processed
 // 	update $since_id to the last max id we processed from the current batch
 // repeat
