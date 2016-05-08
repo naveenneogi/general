@@ -1,8 +1,9 @@
 package com.ejenta;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import org.jetbrains.annotations.Nullable;
 import com.google.common.collect.Sets;
-
 import java.util.*;
 
 public class EjentaParty {
@@ -13,11 +14,21 @@ public class EjentaParty {
 
    // map of person -> list of his contacts
    private static ContactsDump contactsDump;
+   //private static Multimap<Integer, Integer> multiContacts;
    private static Set<Integer> individualContactList;
    private static Set<Integer> partyContactList;
 
-   // supplementing data:
    public EjentaParty(Integer minContacts, ContactsDump contacts) {
+      minKnownContacts = minContacts;
+      minNumOFInvites = minContacts+1;
+      contactsDump = processContactsList(contacts);
+      individualContactList = contactsDump.keySet();
+      partyContactList = generatePartyContactList(individualContactList);
+      //printDump();
+   }
+
+   /*
+   public EjentaParty(Integer minContacts, Multimap<Integer, Integer> contacts) {
       minKnownContacts = minContacts;
       minNumOFInvites = minContacts+1;
       contactsDump = processContactsList(contacts);
@@ -25,6 +36,7 @@ public class EjentaParty {
       partyContactList = generatePartyContactList(individualContactList);
       printDump();
    }
+    */
 
    private static void printDump() {
       System.out.println("minKnownContacts: " + minKnownContacts);
@@ -49,7 +61,9 @@ public class EjentaParty {
          //    check his contacts size
          //    then check if his contacts are in the potential list
          // Keep filtering one or more contacts out recursively
-         // until we end up with a list thats the same as the starting list
+         // Recursion stops:
+         //    when the final list it generates is the same as the input list it got
+         //    Or if the list size is less than the min required
          boolean didWeDropAnyContact = false;
          for (Integer contact: potentialPartyList) {
             if(contactsDump.get(contact).size() >= minKnownContacts &&
@@ -61,8 +75,10 @@ public class EjentaParty {
          }
 
          // If we did drop one or more contacts, redo the party list by filtering one or more contacts out recursively
-         // until we end up with a list thats the same as the starting list
-         // this is the ultimate stopping condition if we indeed manage to find a working party list
+         // Recursion stops:
+         //    when the final list it generates is the same as the input list it got
+         //    Or if the list size is less than the min required
+         //    this is the ultimate stopping condition if we indeed manage to find a working party list
          // NOTE: we could have also done the 'expensive' partyList.equals(potentialPartyList) instead of the bool flag
          //System.out.println(potentialPartyList); System.out.println(partyList);
          if(didWeDropAnyContact) {
@@ -76,10 +92,10 @@ public class EjentaParty {
       }
    }
 
-
-   private static ContactsDump processContactsList(ContactsDump contactsDump) {
+   /*
+   private static ContactsDump processContactsList(Multimap<Integer, Integer> contactsDump) {
       // load up a temp map and add missing connections by looking into each of the contacts connections
-      ContactsDump mapOflistOfContactsTemp = (ContactsDump) contactsDump.clone();
+      Multimap<Integer, Integer> mapOflistOfContactsTemp = ArrayListMultimap.create();
 
       try {
          // look into peoples contacts and build a potential list of invites
@@ -107,9 +123,48 @@ public class EjentaParty {
 
       return mapOflistOfContactsTemp;
    }
+   */
+
+
+   private static ContactsDump processContactsList(ContactsDump contactsDump) {
+      // load up a temp map and add missing connections by looking into each of the contacts connections
+      ContactsDump mapOflistOfContactsTemp = (ContactsDump) contactsDump.clone();
+
+      try {
+         // look into peoples contacts and build a potential list of invites
+         contactsDump.forEach((Integer contactA, HashSet<Integer> contactsList) -> {
+
+            //System.out.println("processing: " + contactA + " -> " + contactsList);
+            // for each of contactA's contactB,
+            //    make a hashmap entry hash["A-B"]=1, to be used later
+            //    also reverse map B to A: ie, in the map< B, add A to the list of contacts of B>
+            for (Integer contactB : contactsList) {
+               if (!mapOflistOfContactsTemp.containsKey(contactB)) {
+                  //contactsOfB = new HashSet<Integer>();
+                  mapOflistOfContactsTemp.put(contactB, new HashSet<>());
+               }
+               mapOflistOfContactsTemp.get(contactB).add(contactA);
+            }
+         });
+      } catch (NullPointerException e) {
+         //System.out.printf("Exception thrown while processing: " + p + " and its contact " + contact);
+         System.out.printf("Exception thrown while processing: " + e.getMessage());
+         java.lang.System.exit(0);
+
+      } catch (Exception e) {
+         System.out.println("Unknown exception thrown: " + e.getMessage());
+         java.lang.System.exit(0);
+      }
+
+      return mapOflistOfContactsTemp;
+   }
 
    public Set<Integer> getPartyContactList () {
       return partyContactList;
+   }
+
+   public ContactsDump getContactsDump() {
+      return contactsDump;
    }
 
    public boolean doesContactAknowContactB(Integer A, Integer B) {
@@ -122,19 +177,14 @@ public class EjentaParty {
 
    public static void main(String[] args) {
 
-      Integer minKnownContacts = 1;
+      Integer minKnownContacts = 2;
       ContactsDump contactsDump = EjentaPartyHelper.loadContactsListFromStatic();
       EjentaParty party = new EjentaParty(minKnownContacts, contactsDump);
+      System.out.println("Contacts Dump: " + party.getContactsDump());
       System.out.println("Invites List: " + party.getPartyContactList());
+      junit.framework.TestCase.assertEquals(new HashSet<Integer>(Arrays.asList(1,3,5)), party.getPartyContactList());
 
-      EjentaPartyHelper.loadContactsListFromStdin();
-      /*
-      System.out.println(party.doesContactAknowContactB(1,3));
-      System.out.println(party.doesContactAknowContactB(2,4));
-      System.out.println(party.doesContactAknowContactB(4,2));
-      System.out.println(party.doesContactAknowContactB(6,9));
-      System.out.println(party.doesContactAknowContactB(10,11));
-      System.out.println(party.doesContactAknowContactB(12,12));
-      */
+      //EjentaPartyHelper.loadContactsListFromStdin();
+
    }
 }
