@@ -17,16 +17,13 @@ public class EjentaParty {
    private static Set<Integer> partyContactList;
 
    // supplementing data:
-
-
-   public EjentaParty(Integer minKnownContacts, ContactsDump contactsDump) {
-      this.minKnownContacts = minKnownContacts;
-      this.minNumOFInvites = minKnownContacts+1;
-      this.contactsDump = processContactsList(contactsDump);
-      this.individualContactList = this.contactsDump.keySet();
-      this.partyContactList = generatePartyContactList(this.individualContactList);
-
-      printDump();
+   public EjentaParty(Integer minContacts, ContactsDump contacts) {
+      minKnownContacts = minContacts;
+      minNumOFInvites = minContacts+1;
+      contactsDump = processContactsList(contacts);
+      individualContactList = contacts.keySet();
+      partyContactList = generatePartyContactList(individualContactList);
+      //printDump();
    }
 
    private static void printDump() {
@@ -95,7 +92,7 @@ public class EjentaParty {
             for (Integer contactB : contactsList) {
                if (!mapOflistOfContactsTemp.containsKey(contactB)) {
                   //contactsOfB = new HashSet<Integer>();
-                  mapOflistOfContactsTemp.put(contactB, new HashSet<Integer>());
+                  mapOflistOfContactsTemp.put(contactB, new HashSet<>());
                }
                mapOflistOfContactsTemp.get(contactB).add(contactA);
             }
@@ -105,8 +102,7 @@ public class EjentaParty {
          System.out.printf("Exception thrown while processing: " + e.getMessage());
 
       } catch (Exception e) {
-
-
+         System.out.println("Unknown exception thrown: " + e.getMessage());
       }
 
       return mapOflistOfContactsTemp;
@@ -114,7 +110,6 @@ public class EjentaParty {
 
    public Set<Integer> getPartyContactList () {
       return partyContactList;
-
    }
 
    public boolean doesContactAknowContactB(Integer A, Integer B) {
