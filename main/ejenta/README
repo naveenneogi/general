@@ -48,7 +48,8 @@ ContactsDump:
 * Representing this via ContactsDump class extending HashMap<Integer, HashSet<Integer>>. I could have also
 built a bit more complex Contacts class that would represent this info in more involved data structures and
 give them gettors and settors, but I chose NOT to, for now.
-
+* This could very well evolve into a Class that stores the contacts internally in one or more collections
+objects and supports methods to get/set/update, read from STDIN, etc, along with being thread-safe.
 
 
 
