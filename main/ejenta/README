@@ -1,0 +1,51 @@
+EjentaParty:
+* EjentaParty class allows one to set:
+    the minimum number of contacts each contact should know from the final invites list
+    the pairs of contacts that know each other from STDIN, it accepts these contacts as Integers (numbers only)
+* Client can either set these two parameters through the constructor OR by calling explicit Settors
+* Clients can then call the getPartyContactList() method to get the final invites list that satisfy the min contacts
+requirement. An empty list means we could not come up with a list of contacts that satisfy the min contacts req.
+
+* As for representing contacts, I have used simple Integers/numeric IDs to denote a contacts since this guarantees to be
+unique per contact and also spares us from dealing with strings or any other complex data types or objects of our own.
+
+* As for the solution design, although there could be many ways to solve this, I have used simple recursion
+to start with a full list of contacts first and then recursively chopping the list down by removing contacts
+that do not satisy the minKnown criteria on that chopping round. Recursion ends when we eventually hit a list that
+itself is less than the min required OR if we could not chop any contact from that list on that round.
+
+* The program tests itself by checking against a hardcoded list of minContacts and list of contact pairs. It also
+provides for a way to get inputs from STDIN. The convention used for STDIN is as noted below:
+Enter the contact pairs one per line. Enter their numeric IDs only, for eg
+	1,5
+	1,6
+	2,5
+	so on, with only one pair per line
+If you enter more than one pair per line, only the first pair is considered, rest will be ignored
+Enter exit/EXIT when done
+
+* The program prints the given input list and the final invite list as noted below, for eg:
+Input/Given Contacts List: {1=[3, 5, 7, 9], 2=[4, 6, 8], 3=[4, 5], 7=[8], 8=[9]}
+Party Invites List (an empty list means we could not come up with a list of contacts that knew atleast 3 other contacts from that list): []
+
+
+
+
+ContactsDump:
+* I have used a {map of ints -> hashset of ints} to represent each contact and his list of known contacts.
+* Representing this via ContactsDump class extending HashMap<Integer, HashSet<Integer>>. I could have also built a bit
+more complex Contacts class that would represent this info in more involved data structures and give them gettors
+and settors, but I chose NOT to, for now.
+
+
+
+
+EjentaPartyHelper:
+* Is a helper class that supports methods to get inputs from STDIN as noted above OR from hardcoded values
+
+
+
+
+EjentaPartyTest:
+* Tests out the functionality by running through the hardcoded set, checking for connections between random contacts
+and validating the final invites list by changing the minContacts criteria to 1,2 or 3.
