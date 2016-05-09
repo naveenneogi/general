@@ -18,9 +18,9 @@ by removing contacts that do not satisy the minKnown criteria on that chopping r
 Recursion ends when we eventually hit a list that itself is less than the min required OR if we could
 not chop any contact from that list on that round.
 
-* Also important to note that the solution is NOT thread-safe. Making it so is not a big deal by using
-Collections and Synchronized blocks/methods but have been intentionally dropped for the sake of
-convenience for now.
+* Also important to note that the solution is NOT thread-safe. Thread-safety can be achieved easily
+through Atomic Objects/Collections/Synchronized blocks/methods but have been intentionally left out
+for the sake of convenience, for now.
 
 * The program tests itself by checking against a hardcoded list of minContacts and list of contact pairs.
 It also provides for a way to get inputs from STDIN. The convention used for STDIN is as noted below:
