@@ -1,13 +1,6 @@
 package com.company;
 
 import java.util.Arrays;
-import static org.junit.Assert.*;
-
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by naveenmurthy on 4/27/16.
@@ -20,6 +13,22 @@ public class Main {
    public static void main(String[] args) throws InterruptedException {
 
       Util.logThreadInfo(Thread.currentThread());
+
+
+      try {
+         Temp.StairCase(5);
+      } catch (Exception e) {
+         System.out.println("exception: " + e.getMessage());
+      }
+
+      try {
+         int n = 170;
+         System.out.println(Temp.toBitString(n));
+         System.out.println(Integer.toBinaryString(n));
+
+      } catch (Exception e) {
+         System.out.println("exception: " + e.getMessage());
+      }
 
       // get cost of items
       int cost = CostOfItems.getCostOfItems(Arrays.asList(3, 1, 4, 2, 8, 10, 20));
@@ -44,6 +53,38 @@ public class Main {
       //ExecutorService execService = Executors.newFixedThreadPool(maxThreads);
 
       //assertEquals("naveen", "naeen");
+
+      try {
+         System.out.println("##############");
+         HashMap<Integer, String> hashMap = new HashMap<Integer, String>();
+         hashMap.put(10,"ten");
+         hashMap.put(11,"eleven");
+         hashMap.put(12,"twelve");
+
+         hashMap.put(1007,"1007");
+         hashMap.put(10,"10");
+         System.out.println(hashMap.get(10));
+      } catch (Exception e) {
+         System.out.println("exception: " + e.getMessage());
+      }
+
+      try {
+         System.out.println("##############");
+         Tree<Integer> tree = new Tree<Integer>(15);
+         tree.add(10);
+         tree.add(20);
+         tree.add(13);
+         tree.add(25);
+         tree.add(11);
+         tree.printInOrder();
+         //tree.mirror();
+         System.out.println("---");
+         //tree.printInOrder();
+         tree.levelOrder();
+         tree.columnOrderTraversal();
+      } catch (Exception e) {
+         System.out.println("exception: " + e.getMessage());
+      }
 
 
 
