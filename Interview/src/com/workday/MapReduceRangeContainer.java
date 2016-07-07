@@ -2,6 +2,12 @@ package com.workday;
 
 
 import java.util.List;
+import java.util.LinkedList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by naveenmurthy on 7/6/16.
@@ -10,10 +16,10 @@ import java.util.List;
  * Each mapper supports the range query within its local smaller dataset
  * As many 'reducer' threads as there are mappers will be spawned
  * these reducers then invoke the mappers range query
- * then the resultsets are combined and returned as an iterator for the application to iterate over
+ * then the resultsets are combined and returned as an iterator for the application
  *
  * The idea behind this Map-Reduce algo is to allow for threads within the container to operate on distinct datasets
- * and hence speed up the search queries by a facor of N where N being the number of mappers/reducers/threads
+ * and hence speed up the search queries by a facor of N, N being the number of mappers/reducers/threads
  *
  * The search operation within each Mapper itself can be implemented in multiple ways - linear, logarithmic, etc
  * depending on the internal data structure we end up using - arrays, skiplists, treemaps, treaps, etc
@@ -27,16 +33,6 @@ public abstract class MapReduceRangeContainer implements RangeContainer, MapperC
     protected static short MAPPER_DATA_SIZE = 3200;
     List<Mapper> mapperList;
 
-    /*
-    public static RangeContainer createMappers(long[] data) {
-        if (data == null || data.length > 32000 || data.length == 0) {
-            throw new IllegalArgumentException("RangeContainer data size to be <= 32000");
-        }
-        // partition the data across 'few' mappers
-        mapperList = createMappers(data);
-    }
-    */
-
     public MapReduceRangeContainer(long[] data) {
         if (data == null || data.length > 32000 || data.length == 0) {
             throw new IllegalArgumentException("RangeContainer data size to be <= 32000");
@@ -46,8 +42,61 @@ public abstract class MapReduceRangeContainer implements RangeContainer, MapperC
         mapperList = createMappers(data);
     }
 
-    @Override
+    /**
+     * This method does the reduce part of the algorithm.
+     * It creates as many threads as mappers and then executes the range query
+     * and merges the results from each thread to return the final result.
+     * @param fromValue
+     * @param toValue
+     * @param fromInclusive
+     * @param toInclusive
+     * @return
+     */
+    private List<Short> reduce(long fromValue, long toValue,
+                               boolean fromInclusive, boolean toInclusive) {
+        ExecutorService executor = Executors.newFixedThreadPool(mapperList.size());
+        List<Callable<List<Short>>> reducers = new LinkedList<>();
+        for (Mapper mapper : mapperList) {
+            Callable<List<Short>> reducer = new Reducer(mapper, fromValue, toValue, fromInclusive, toInclusive);
+            reducers.add(reducer);
+        }
+
+        List<Future<List<Short>>> reducerResults = null;
+
+        try {
+            reducerResults = executor.invokeAll(reducers);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            executor.shutdown();
+        }
+        // Wait until all threads are done
+        while (!executor.isTerminated()) {
+
+        }
+
+        // the results are in the same order in which they were added to the executor service.
+        List<Short> resultIds = new LinkedList<>();
+        for (Future<List<Short>> result : reducerResults) {
+            try {
+                resultIds.addAll(result.get());
+            } catch (InterruptedException | ExecutionException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        // the results are in the order expected and hence no need to sort.
+        return resultIds;
+    }
+
+    /**
+     * Calls the reduce method which creates as many threads as mappers and invokes the range
+     * query on each thread before merging the results.
+     */
     public Ids findIdsInRange(long fromValue, long toValue, boolean fromInclusive, boolean toInclusive) {
-        return null;
+        List<Short> idsList = reduce(fromValue, toValue, fromInclusive, toInclusive);
+        return new IdsImpl(idsList);
     }
 }

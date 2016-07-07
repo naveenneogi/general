@@ -11,8 +11,6 @@ import java.util.LinkedList;
  * as such this is also forced to implement all the interfaces the MapReduceRangeContainer depends on if not already
  * implemented within the base class
  *
- *
- *
  */
 public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
 
@@ -35,6 +33,8 @@ public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
         for (int i = 0; i < noOfMappers; i++) {
             int startRange = i * MAPPER_DATA_SIZE;
             int endRange = Math.min(startRange + MAPPER_DATA_SIZE, data.length) ;
+
+            // instantiate the 'MapperLinear' objects here
             Mapper mapper = new MapperLinear(startRange, Arrays.copyOfRange(data, startRange, endRange));
             mappers.add(mapper);
         }
