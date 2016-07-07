@@ -2,7 +2,6 @@ package com.workday;
 
 
 import java.util.List;
-import java.util.LinkedList;
 
 /**
  * Created by naveenmurthy on 7/6/16.
@@ -18,29 +17,33 @@ import java.util.LinkedList;
  *
  * The search operation within each Mapper itself can be implemented in multiple ways - linear, logarithmic, etc
  * depending on the internal data structure we end up using - arrays, skiplists, treemaps, treaps, etc
+ * Likewise, we will have different extensions to MapReduceRangeContainer depending on the internal data structures
+ * these extensions use, for eg: MapReduceLinear, MapReduceLogarithmic
  *
  */
-public class MapReduceRangeContainer implements RangeContainer {
+public abstract class MapReduceRangeContainer implements RangeContainer, MapperCreator {
 
     // data size for each mapper to deal with
-    private static short MAPPER_DATA_SIZE = 3200;
+    protected static short MAPPER_DATA_SIZE = 3200;
     List<Mapper> mapperList;
 
-    private MapReduceRangeContainer(long[] data) {
+    /*
+    public static RangeContainer createMappers(long[] data) {
         if (data == null || data.length > 32000 || data.length == 0) {
             throw new IllegalArgumentException("RangeContainer data size to be <= 32000");
         }
-        // partition the data and dist it across 'few' mappers
+        // partition the data across 'few' mappers
         mapperList = createMappers(data);
     }
+    */
 
-    private List<Mapper> createMappers(long[] data) {
-        List<Mapper> mappers = new LinkedList<>();
-        return mappers;
-    }
-
-    public static RangeContainer create(long[] data) {
-        return new MapReduceRangeContainer(data);
+    public MapReduceRangeContainer(long[] data) {
+        if (data == null || data.length > 32000 || data.length == 0) {
+            throw new IllegalArgumentException("RangeContainer data size to be <= 32000");
+        }
+        // partition the data across 'few' mappers
+        // also expect the different implementations of MapReduceRangeContainer to implement their specific mappers
+        mapperList = createMappers(data);
     }
 
     @Override

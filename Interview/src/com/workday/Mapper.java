@@ -1,6 +1,7 @@
 package com.workday;
 
-import java.util.concurrent.ConcurrentSkipListMap;
+
+import java.util.List;
 
 /**
  * Created by naveenmurthy on 7/6/16.
@@ -18,17 +19,16 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * depending on the internal data structure we end up using - arrays, skiplists, treemaps, treaps, etc
  *
  */
-public class Mapper {
-    // offset of data[] that this mapper is dealing with
-    int indexOffset;
-    // data that this mapper is dealing with:
-    // we can either work with an array and do a linear search,
-    // or have a SkipList/TreeMap kinda datastruct to
-    long[] data;
-    ConcurrentSkipListMap<Long, Short> reverseIndexDataToId;
+public interface Mapper {
 
-    Mapper(int index, long[] data) {
-        this.indexOffset = index;
-        this.data = data;
-    }
+    /**
+     *
+     * @param fromValue
+     * @param toValue
+     * @param fromInclusive
+     * @param toInclusive
+     * @return
+     */
+    public List<Short> findIdsInRange(long fromValue, long toValue, boolean fromInclusive, boolean toInclusive);
+
 }
