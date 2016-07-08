@@ -23,22 +23,28 @@ public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
      * @param data
      * @return
      */
-    public List<Mapper> createMappers(long[] data) {
-        int noOfMappers = data.length / MAPPER_DATA_SIZE;
-        if (data.length % MAPPER_DATA_SIZE != 0) {
-            noOfMappers++;
+    public List<Mapper> createMappers(long[] data, short mapperDataSize) {
+        try {
+            if (mapperDataSize == 0) throw (new Exception("mapper data size passed is invalid"));
+            int noOfMappers = data.length / mapperDataSize;
+            if (data.length % mapperDataSize != 0) {
+                noOfMappers++;
+            }
+            List<Mapper> mappers = new LinkedList<>();
+
+            for (int i = 0; i < noOfMappers; i++) {
+                int startRange = i * mapperDataSize;
+                int endRange = Math.min(startRange + mapperDataSize, data.length) ;
+
+                // instantiate the 'MapperLinear' object that deals with the data subset within the start and end ranges
+                Mapper mapper = new MapperLinear(data, startRange, endRange);
+                mappers.add(mapper);
+            }
+            return mappers;
+        } catch (Exception e) {
+            //move to a log.error
+            System.out.println(e.getMessage());
         }
-        List<Mapper> mappers = new LinkedList<>();
-
-        for (int i = 0; i < noOfMappers; i++) {
-            int startRange = i * MAPPER_DATA_SIZE;
-            int endRange = Math.min(startRange + MAPPER_DATA_SIZE, data.length) ;
-
-            // instantiate the 'MapperLinear' objects here
-            Mapper mapper = new MapperLinear(startRange, Arrays.copyOfRange(data, startRange, endRange));
-            mappers.add(mapper);
-        }
-
-        return mappers;
+        return null;
     }
 }

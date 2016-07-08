@@ -2,6 +2,7 @@ package com.workday;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.LinkedList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -38,8 +39,8 @@ public abstract class MapReduceRangeContainer implements RangeContainer, MapperC
             throw new IllegalArgumentException("RangeContainer data size to be <= 32000");
         }
         // partition the data across 'few' mappers
-        // also expect the different implementations of MapReduceRangeContainer to implement their specific mappers
-        mapperList = createMappers(data);
+        // also expect the different implementations of MapReduceRangeContainer to implement their specific createMappers
+        mapperList = createMappers(data, MAPPER_DATA_SIZE);
     }
 
     /**
