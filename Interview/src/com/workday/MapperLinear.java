@@ -23,6 +23,8 @@ public class MapperLinear implements Mapper {
     long[] dataSubset;
 
     public MapperLinear(long[] data, int beginMapperOffset, int endMapperOffset) {
+        this.beginMapperOffset = beginMapperOffset;
+        this.endMapperOffset = endMapperOffset;
         this.dataSubset = Arrays.copyOfRange(data, beginMapperOffset, endMapperOffset);
     }
 
@@ -43,6 +45,10 @@ public class MapperLinear implements Mapper {
                 idList.add(id);
             }
         }
+
+        System.out.println(getClass().getSimpleName() + "." + getClass().getEnclosingMethod()
+                + " Thread# " + Thread.currentThread().getId()
+                + " idList.size() " + idList.size());
 
         return idList;
     }

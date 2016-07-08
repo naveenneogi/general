@@ -1,14 +1,9 @@
 package com.workday;
 
 /**
- * Created by naveenmurthy on 7/6/16.
- *
- * there can be many 'efficient' implementations of RangeContainer
- * the applications calling can instantiate one or more flavors based on their specific needs and constraints
- * by passing in the appropriate 'strategy' to the factory
- *
+ * Created by naveenmurthy on 7/8/16.
  */
-public interface DynamicRangeContainerFactory extends RangeContainerFactory {
+public interface RangeContainerFactoryDynamic extends RangeContainerFactory{
 
     /**
      * builds an immutable container optimized for range queries.

@@ -19,9 +19,8 @@ public interface MapperCreator {
     /**
      * different implementations of mappers will need to support this interface
      * @param data
-     * @param mapperDataSize
      * @return
      */
-    public List<Mapper> createMappers(long[] data, short mapperDataSize);
+    public List<Mapper> createMappers(long[] data);
 
 }

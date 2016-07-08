@@ -30,8 +30,6 @@ import java.util.concurrent.Future;
  */
 public abstract class MapReduceRangeContainer implements RangeContainer, MapperCreator {
 
-    // data size for each mapper to deal with
-    protected static short MAPPER_DATA_SIZE = 3200;
     List<Mapper> mapperList;
 
     public MapReduceRangeContainer(long[] data) {
@@ -40,7 +38,7 @@ public abstract class MapReduceRangeContainer implements RangeContainer, MapperC
         }
         // partition the data across 'few' mappers
         // also expect the different implementations of MapReduceRangeContainer to implement their specific createMappers
-        mapperList = createMappers(data, MAPPER_DATA_SIZE);
+        mapperList = createMappers(data);
     }
 
     /**
@@ -62,11 +60,16 @@ public abstract class MapReduceRangeContainer implements RangeContainer, MapperC
             reducers.add(reducer);
         }
 
+        System.out.println(getClass().getSimpleName() + "." + getClass().getEnclosingMethod()
+                + " Thread# " + Thread.currentThread().getId()
+                + " reducers.size() " + reducers.size());
+
         List<Future<List<Short>>> reducerResults = null;
 
         try {
             reducerResults = executor.invokeAll(reducers);
         } catch (InterruptedException e) {
+            // log.error(e) ??
             // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
@@ -83,6 +86,7 @@ public abstract class MapReduceRangeContainer implements RangeContainer, MapperC
             try {
                 resultIds.addAll(result.get());
             } catch (InterruptedException | ExecutionException e) {
+                // log.error(e) ??
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }

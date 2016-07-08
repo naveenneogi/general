@@ -14,6 +14,10 @@ import java.util.LinkedList;
  */
 public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
 
+    // data size for each mapper to deal with, for linear mapreduce, we will have 1600
+    // other types of mapR may choose different size to facilitate their specific insert/search ops
+    protected static short MAPPER_DATA_SIZE = 1600;
+
     public MapReduceLinearRangeContainer(long[] data) {
         super(data);
     }
@@ -23,27 +27,34 @@ public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
      * @param data
      * @return
      */
-    public List<Mapper> createMappers(long[] data, short mapperDataSize) {
+    // TODO: look into refactoring the crux of this method into a separate utility method that all MapRs could use
+    public List<Mapper> createMappers(long[] data) {
         try {
-            if (mapperDataSize == 0) throw (new Exception("mapper data size passed is invalid"));
-            int noOfMappers = data.length / mapperDataSize;
-            if (data.length % mapperDataSize != 0) {
+            if (MAPPER_DATA_SIZE == 0) throw (new Exception("mapper data size passed is invalid"));
+            int noOfMappers = data.length / MAPPER_DATA_SIZE;
+            if (data.length % MAPPER_DATA_SIZE != 0) {
                 noOfMappers++;
             }
             List<Mapper> mappers = new LinkedList<>();
 
             for (int i = 0; i < noOfMappers; i++) {
-                int startRange = i * mapperDataSize;
-                int endRange = Math.min(startRange + mapperDataSize, data.length) ;
+                int startRange = i * MAPPER_DATA_SIZE;
+                int endRange = Math.min(startRange + MAPPER_DATA_SIZE, data.length) ;
 
                 // instantiate the 'MapperLinear' object that deals with the data subset within the start and end ranges
                 Mapper mapper = new MapperLinear(data, startRange, endRange);
                 mappers.add(mapper);
             }
+
+            System.out.println(getClass().getSimpleName() + "." + getClass().getEnclosingMethod()
+                    + " Thread# " + Thread.currentThread().getId()
+                    + " mappers.size() " + mappers.size());
+
             return mappers;
         } catch (Exception e) {
-            //move to a log.error
-            System.out.println(e.getMessage());
+            // log.error(e) ??
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         return null;
     }

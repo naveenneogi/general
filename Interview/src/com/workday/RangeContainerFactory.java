@@ -15,4 +15,5 @@ public interface RangeContainerFactory {
      */
 
     RangeContainer createContainer(long[] data);
+
 }

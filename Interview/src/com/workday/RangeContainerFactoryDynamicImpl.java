@@ -1,13 +1,9 @@
 package com.workday;
 
 /**
- * Created by naveenmurthy on 7/6/16.
- *
- * there can be many 'efficient' implementations of RangeContainer as enumarated below
- * the applications calling can instantiate one or more flavors based on their specific needs and constraints
- *
+ * Created by naveenmurthy on 7/8/16.
  */
-public class DynamicRangeContainerFactoryImpl implements DynamicRangeContainerFactory {
+public class RangeContainerFactoryDynamicImpl implements RangeContainerFactoryDynamic {
 
     /**
      *
@@ -30,14 +26,16 @@ public class DynamicRangeContainerFactoryImpl implements DynamicRangeContainerFa
                 return new MapReduceLinearRangeContainer(data);
             }
             if (strategy.equals(RangeContainerStrategy.MapReduceLogarithmic)) {
-                return new MapReduceLinearRangeContainer(data);
+                return new MapReduceLogarithmicRangeContainer(data);
             }
 
 
         } catch (Exception e) {
             // log.error(e) ??
-            System.out.println("Exception thrown: " + e.getMessage());
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         return null;
     }
+
 }
