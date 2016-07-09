@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  * */
 public class MapperLogarithmic implements Mapper {
 
-    private final static Logger logger = Logger.getLogger(MapReduceRangeContainer.class.getName());
+    private final static Logger logger = Logger.getLogger(MapperLogarithmic.class.getName());
 
     // offset of data[] that this mapper is dealing with
     int beginMapperOffset;
@@ -32,11 +32,11 @@ public class MapperLogarithmic implements Mapper {
 
     // data that this mapper is dealing with: stored as an array and supports linear search
     // TODO: <Long, List<Short>> ?
-    private ConcurrentSkipListMap<Long, Short> indexIds = new ConcurrentSkipListMap<Long, Short>();
+    private ConcurrentSkipListMap<Long, Short> reverseIndexDataToId = new ConcurrentSkipListMap<Long, Short>();
 
     public MapperLogarithmic(long[] data, int beginMapperOffset, int endMapperOffset) {
         for (int i = beginMapperOffset; i < endMapperOffset; i++) {
-            indexIds.put(data[i], (short) i);
+            reverseIndexDataToId.put(data[i], (short) i);
         }
     }
 
@@ -51,7 +51,7 @@ public class MapperLogarithmic implements Mapper {
      */
     public List<Short> findIdsInRange(long fromValue, long toValue,	boolean fromInclusive, boolean toInclusive) {
 
-        ConcurrentNavigableMap<Long, Short>idsRange = indexIds.subMap(fromValue, fromInclusive, toValue, toInclusive);
+        ConcurrentNavigableMap<Long, Short>idsRange = reverseIndexDataToId.subMap(fromValue, fromInclusive, toValue, toInclusive);
         List<Short> idList = new ArrayList<>(idsRange.values());
         Collections.sort(idList);
 

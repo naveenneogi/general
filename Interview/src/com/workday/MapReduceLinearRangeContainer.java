@@ -16,11 +16,11 @@ import java.util.logging.Logger;
  */
 public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
 
-    private final static Logger logger = Logger.getLogger(MapReduceRangeContainer.class.getName());
+    private final static Logger logger = Logger.getLogger(MapReduceLinearRangeContainer.class.getName());
 
     // data size for each mapper to deal with, for linear mapreduce, we will have 1600
     // other types of mapR may choose different size to facilitate their specific insert/search ops
-    protected static short MAPPER_DATA_SIZE = 1600;
+    protected static final short MAPPER_DATA_SIZE = 1600;
 
     public MapReduceLinearRangeContainer(long[] data) {
         super(data);
@@ -34,11 +34,11 @@ public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
     // TODO: look into refactoring the crux of this method into a separate utility method that all MapRs could use
     public List<Mapper> createMappers(long[] data) {
         try {
-            if (MAPPER_DATA_SIZE == 0) throw (new Exception("mapper data size passed is invalid"));
             int noOfMappers = data.length / MAPPER_DATA_SIZE;
             if (data.length % MAPPER_DATA_SIZE != 0) {
                 noOfMappers++;
             }
+
             List<Mapper> mappers = new LinkedList<>();
 
             for (int i = 0; i < noOfMappers; i++) {
@@ -57,9 +57,9 @@ public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
 
             return mappers;
         } catch (Exception e) {
-            // log.error(e) ??
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
+        } finally {
+            // any specific final cleanups?
         }
         return null;
     }

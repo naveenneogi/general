@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class MapperLinear implements Mapper {
 
-    private final static Logger logger = Logger.getLogger(MapReduceRangeContainer.class.getName());
+    private final static Logger logger = Logger.getLogger(MapperLinear.class.getName());
 
     // offset of data[] that this mapper is dealing with
     int beginMapperOffset;

@@ -74,16 +74,13 @@ public abstract class MapReduceRangeContainer implements RangeContainer, MapperC
         try {
             reducerResults = executor.invokeAll(reducers);
         } catch (InterruptedException e) {
-            // log.error(e) ??
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
+            // any specific final cleanups?
             executor.shutdown();
         }
         // Wait until all threads are done
-        while (!executor.isTerminated()) {
-
-        }
+        while (!executor.isTerminated()) {}
 
         // the results are in the same order in which they were added to the executor service.
         List<Short> resultIds = new LinkedList<>();
@@ -91,9 +88,9 @@ public abstract class MapReduceRangeContainer implements RangeContainer, MapperC
             try {
                 resultIds.addAll(result.get());
             } catch (InterruptedException | ExecutionException e) {
-                // log.error(e) ??
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.log(Level.SEVERE, e.getMessage());
+            } finally {
+                // any specific final cleanups?
             }
         }
 
