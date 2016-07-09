@@ -44,6 +44,7 @@ public class MapReduceLogarithmicRangeContainer extends MapReduceRangeContainer 
 
         logger.log(Level.INFO, ""
                 + " Thread." + Thread.currentThread().getName() + "." + Thread.currentThread().getId()
+
                 + " mappers.size() " + mappers.size()
         );
 

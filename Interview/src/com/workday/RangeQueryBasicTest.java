@@ -3,9 +3,7 @@ package com.workday;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 /**
@@ -13,20 +11,27 @@ import org.junit.rules.ExpectedException;
  */
 public class RangeQueryBasicTest {
 
-    private RangeContainer rc;
-    private RangeContainer rcd;
+    private static RangeContainer rc;
+    private static RangeContainer rcd;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    @Before
+    @BeforeClass
+    public static void runOnceBeforeClass() {
+        RangeContainerFactory rf = new RangeContainerFactoryDynamicImpl();
+        RangeContainerFactoryDynamic rfd = new RangeContainerFactoryDynamicImpl();
+        long[] data = new long[]{10, 12, 17, 21, 2, 15, 16};
+
+        rc = rf.createContainer(data);
+        rcd = rfd.createContainer(data, RangeContainerStrategy.MapReduceLogarithmic);
+    }
+
+    //@Before
     public void setUp() {
         RangeContainerFactory rf = new RangeContainerFactoryDynamicImpl();
         long[] data = new long[]{10, 12, 17, 21, 2, 15, 16};
         rc = rf.createContainer(data);
-
-        //RangeContainerFactoryDynamic rfd = new RangeContainerFactoryDynamicImpl();
-        //rcd = rfd.createContainer(data, RangeContainerStrategy.MapReduceLogarithmic);
     }
 
     @Test
@@ -48,7 +53,7 @@ public class RangeQueryBasicTest {
     }
 
 
-    //@Test
+    @Test
     public void runARangeQuery2() {
         Ids ids = rcd.findIdsInRange(14, 17, true, true);
         assertEquals(2, ids.nextId());
