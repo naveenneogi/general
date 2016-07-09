@@ -3,6 +3,8 @@ package com.workday;
 import java.util.Arrays;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by naveenmurthy on 7/6/16.
@@ -13,6 +15,8 @@ import java.util.LinkedList;
  *
  */
 public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
+
+    private final static Logger logger = Logger.getLogger(MapReduceRangeContainer.class.getName());
 
     // data size for each mapper to deal with, for linear mapreduce, we will have 1600
     // other types of mapR may choose different size to facilitate their specific insert/search ops
@@ -46,9 +50,10 @@ public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
                 mappers.add(mapper);
             }
 
-            System.out.println(getClass().getSimpleName() + "." + getClass().getEnclosingMethod()
-                    + " Thread# " + Thread.currentThread().getId()
-                    + " mappers.size() " + mappers.size());
+            logger.log(Level.INFO, ""
+                    + " Thread." + Thread.currentThread().getName() + "." + Thread.currentThread().getId()
+                    + " mappers.size() " + mappers.size()
+            );
 
             return mappers;
         } catch (Exception e) {

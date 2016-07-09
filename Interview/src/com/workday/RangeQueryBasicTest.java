@@ -25,8 +25,8 @@ public class RangeQueryBasicTest {
         long[] data = new long[]{10, 12, 17, 21, 2, 15, 16};
         rc = rf.createContainer(data);
 
-        RangeContainerFactoryDynamic rfd = new RangeContainerFactoryDynamicImpl();
-        rcd = rfd.createContainer(data, RangeContainerStrategy.MapReduceLogarithmic);
+        //RangeContainerFactoryDynamic rfd = new RangeContainerFactoryDynamicImpl();
+        //rcd = rfd.createContainer(data, RangeContainerStrategy.MapReduceLogarithmic);
     }
 
     @Test
@@ -45,11 +45,10 @@ public class RangeQueryBasicTest {
         ids = rc.findIdsInRange(20, Long.MAX_VALUE, false, true);
         assertEquals(3, ids.nextId());
         assertEquals(Ids.END_OF_IDS, ids.nextId());
-
     }
 
 
-    @Test
+    //@Test
     public void runARangeQuery2() {
         Ids ids = rcd.findIdsInRange(14, 17, true, true);
         assertEquals(2, ids.nextId());

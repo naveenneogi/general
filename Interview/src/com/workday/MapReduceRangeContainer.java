@@ -10,6 +10,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Created by naveenmurthy on 7/6/16.
  *
@@ -30,6 +33,7 @@ import java.util.concurrent.Future;
  */
 public abstract class MapReduceRangeContainer implements RangeContainer, MapperCreator {
 
+    private final static Logger logger = Logger.getLogger(MapReduceRangeContainer.class.getName());
     List<Mapper> mapperList;
 
     public MapReduceRangeContainer(long[] data) {
@@ -60,9 +64,10 @@ public abstract class MapReduceRangeContainer implements RangeContainer, MapperC
             reducers.add(reducer);
         }
 
-        System.out.println(getClass().getSimpleName() + "." + getClass().getEnclosingMethod()
-                + " Thread# " + Thread.currentThread().getId()
-                + " reducers.size() " + reducers.size());
+        logger.log(Level.INFO, ""
+                + " Thread." + Thread.currentThread().getName() + "." + Thread.currentThread().getId()
+                + " reducers.size() " + reducers.size()
+        );
 
         List<Future<List<Short>>> reducerResults = null;
 

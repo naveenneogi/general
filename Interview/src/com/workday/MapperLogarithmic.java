@@ -7,6 +7,9 @@ import java.util.Collections;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentNavigableMap;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Created by naveenmurthy on 7/8/16.
  *
@@ -20,6 +23,8 @@ import java.util.concurrent.ConcurrentNavigableMap;
  *
  * */
 public class MapperLogarithmic implements Mapper {
+
+    private final static Logger logger = Logger.getLogger(MapReduceRangeContainer.class.getName());
 
     // offset of data[] that this mapper is dealing with
     int beginMapperOffset;
@@ -50,9 +55,10 @@ public class MapperLogarithmic implements Mapper {
         List<Short> idList = new ArrayList<>(idsRange.values());
         Collections.sort(idList);
 
-        System.out.println(getClass().getSimpleName() + "." + getClass().getEnclosingMethod()
-                + " Thread# " + Thread.currentThread().getId()
-                + " idList.size() " + idList.size());
+        logger.log(Level.INFO, ""
+                + " Thread." + Thread.currentThread().getName() + "." + Thread.currentThread().getId()
+                + " idList.size() " + idList.size()
+        );
 
         return idList;
 

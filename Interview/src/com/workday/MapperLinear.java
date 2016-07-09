@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.LinkedList;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Created by naveenmurthy on 7/6/16.
  *
@@ -14,6 +17,8 @@ import java.util.LinkedList;
  *
  */
 public class MapperLinear implements Mapper {
+
+    private final static Logger logger = Logger.getLogger(MapReduceRangeContainer.class.getName());
 
     // offset of data[] that this mapper is dealing with
     int beginMapperOffset;
@@ -46,9 +51,10 @@ public class MapperLinear implements Mapper {
             }
         }
 
-        System.out.println(getClass().getSimpleName() + "." + getClass().getEnclosingMethod()
-                + " Thread# " + Thread.currentThread().getId()
-                + " idList.size() " + idList.size());
+        logger.log(Level.INFO, ""
+                + " Thread." + Thread.currentThread().getName() + "." + Thread.currentThread().getId()
+                + " idList.size() " + idList.size()
+        );
 
         return idList;
     }

@@ -2,11 +2,15 @@ package com.workday;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by naveenmurthy on 7/8/16.
  */
 public class MapReduceLogarithmicRangeContainer extends MapReduceRangeContainer {
+
+    private final static Logger logger = Logger.getLogger(MapReduceRangeContainer.class.getName());
 
     // data size for each mapper to deal with, for logarithmic mapreduce, we will have 3200
     // other types of mapR may choose different size to facilitate their specific insert/search ops
@@ -33,14 +37,15 @@ public class MapReduceLogarithmicRangeContainer extends MapReduceRangeContainer 
             int startRange = i * MAPPER_DATA_SIZE;
             int endRange = Math.min(startRange + MAPPER_DATA_SIZE, data.length) ;
 
-            // instantiate the 'MapperLinear' objects here
+            // instantiate the 'MapperLogarithmic' objects here
             Mapper mapper = new MapperLogarithmic(data, startRange, endRange);
             mappers.add(mapper);
         }
 
-        System.out.println(getClass().getSimpleName() + "." + getClass().getEnclosingMethod()
-                + " Thread# " + Thread.currentThread().getId()
-                + " mappers.size() " + mappers.size());
+        logger.log(Level.INFO, ""
+                + " Thread." + Thread.currentThread().getName() + "." + Thread.currentThread().getId()
+                + " mappers.size() " + mappers.size()
+        );
 
         return mappers;
     }
