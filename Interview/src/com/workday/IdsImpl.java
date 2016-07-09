@@ -9,9 +9,11 @@ import java.util.Iterator;
 public class IdsImpl implements Ids {
 
     Iterator<Short> itr;
+    int size;
 
     public IdsImpl(List<Short> idList) {
-        this.itr = idList.iterator();
+        itr = idList.iterator();
+        size = idList.size();
     }
 
     @Override

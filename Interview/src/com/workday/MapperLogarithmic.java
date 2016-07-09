@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collectors;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentNavigableMap;
 
@@ -26,17 +27,20 @@ public class MapperLogarithmic implements Mapper {
 
     private final static Logger logger = Logger.getLogger(MapperLogarithmic.class.getName());
 
-    // offset of data[] that this mapper is dealing with
-    int beginMapperOffset;
-    int endMapperOffset;
-
-    // data that this mapper is dealing with: stored as an array and supports linear search
+    // data that this mapper is dealing with: stored as a skipList and supports log(n) search
     // TODO: <Long, List<Short>> ?
-    private ConcurrentSkipListMap<Long, Short> reverseIndexDataToId = new ConcurrentSkipListMap<Long, Short>();
+    private ConcurrentSkipListMap<Long, List<Short>> reverseIndexDataToId = new ConcurrentSkipListMap<>();
 
     public MapperLogarithmic(long[] data, int beginMapperOffset, int endMapperOffset) {
         for (int i = beginMapperOffset; i < endMapperOffset; i++) {
-            reverseIndexDataToId.put(data[i], (short) i);
+            long item = data[i];
+            if (reverseIndexDataToId.containsKey(item)) {
+                reverseIndexDataToId.get(item).add((short) i);
+            } else {
+                List<Short> indexList = new LinkedList<>();
+                indexList.add((short) i);
+                reverseIndexDataToId.put(item,indexList);
+            }
         }
     }
 
@@ -51,8 +55,9 @@ public class MapperLogarithmic implements Mapper {
      */
     public List<Short> findIdsInRange(long fromValue, long toValue,	boolean fromInclusive, boolean toInclusive) {
 
-        ConcurrentNavigableMap<Long, Short>idsRange = reverseIndexDataToId.subMap(fromValue, fromInclusive, toValue, toInclusive);
-        List<Short> idList = new ArrayList<>(idsRange.values());
+        ConcurrentNavigableMap<Long, List<Short>> idsRange = reverseIndexDataToId.subMap(fromValue, fromInclusive, toValue, toInclusive);
+        List<List<Short>> idMultiList = new ArrayList<>(idsRange.values());
+        List<Short> idList = idMultiList.stream().flatMap(l -> l.stream()).collect(Collectors.toList());
         Collections.sort(idList);
 
         logger.log(Level.INFO, ""
