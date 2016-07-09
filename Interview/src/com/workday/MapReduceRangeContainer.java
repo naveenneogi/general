@@ -13,6 +13,8 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.util.logging.Level.SEVERE;
+
 /**
  * Created by naveenmurthy on 7/6/16.
  *
@@ -37,8 +39,10 @@ public abstract class MapReduceRangeContainer implements RangeContainer, MapperC
     List<Mapper> mapperList;
 
     public MapReduceRangeContainer(long[] data) {
+        logger.setLevel(SEVERE);
+
         if (data == null || data.length > 32000 || data.length == 0) {
-            throw new IllegalArgumentException("RangeContainer data size to be <= 32000");
+            throw new IllegalArgumentException("RangeContainer invalid data passed: data size to be within 1-32k");
         }
         // partition the data across 'few' mappers
         // also expect the different implementations of MapReduceRangeContainer to implement their specific createMappers

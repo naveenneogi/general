@@ -7,6 +7,9 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.util.Arrays.copyOfRange;
+import static java.util.logging.Level.SEVERE;
+
 /**
  * Created by naveenmurthy on 7/6/16.
  *
@@ -28,9 +31,11 @@ public class MapperLinear implements Mapper {
     long[] dataSubset;
 
     public MapperLinear(long[] data, int beginMapperOffset, int endMapperOffset) {
+        logger.setLevel(SEVERE);
+
         this.beginMapperOffset = beginMapperOffset;
         this.endMapperOffset = endMapperOffset;
-        this.dataSubset = Arrays.copyOfRange(data, beginMapperOffset, endMapperOffset);
+        this.dataSubset = copyOfRange(data, beginMapperOffset, endMapperOffset);
     }
 
     /**

@@ -11,6 +11,8 @@ import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.util.logging.Level.SEVERE;
+
 /**
  * Created by naveenmurthy on 7/8/16.
  *
@@ -32,6 +34,8 @@ public class MapperLogarithmic implements Mapper {
     private ConcurrentSkipListMap<Long, List<Short>> reverseIndexDataToId = new ConcurrentSkipListMap<>();
 
     public MapperLogarithmic(long[] data, int beginMapperOffset, int endMapperOffset) {
+        logger.setLevel(SEVERE);
+
         for (int i = beginMapperOffset; i < endMapperOffset; i++) {
             long item = data[i];
             if (reverseIndexDataToId.containsKey(item)) {
@@ -39,7 +43,7 @@ public class MapperLogarithmic implements Mapper {
             } else {
                 List<Short> indexList = new LinkedList<>();
                 indexList.add((short) i);
-                reverseIndexDataToId.put(item,indexList);
+                reverseIndexDataToId.put(item, indexList);
             }
         }
     }

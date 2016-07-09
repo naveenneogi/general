@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.util.logging.Level.SEVERE;
+
 /**
  * Created by naveenmurthy on 7/8/16.
  */
@@ -18,6 +20,7 @@ public class MapReduceLogarithmicRangeContainer extends MapReduceRangeContainer 
 
     public MapReduceLogarithmicRangeContainer(long[] data) {
         super(data);
+        logger.setLevel(SEVERE);
     }
 
     /**
@@ -45,10 +48,12 @@ public class MapReduceLogarithmicRangeContainer extends MapReduceRangeContainer 
                 mappers.add(mapper);
             }
 
+            /*
             logger.log(Level.INFO, ""
                     + " Thread." + Thread.currentThread().getName() + "." + Thread.currentThread().getId()
                     + " mappers.size() " + mappers.size()
             );
+            */
 
             return mappers;
         } catch (Exception e) {

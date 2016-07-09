@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.util.logging.Level.SEVERE;
+
 /**
  * Created by naveenmurthy on 7/6/16.
  *
@@ -24,6 +26,7 @@ public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
 
     public MapReduceLinearRangeContainer(long[] data) {
         super(data);
+        logger.setLevel(SEVERE);
     }
 
     /**
@@ -50,10 +53,12 @@ public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
                 mappers.add(mapper);
             }
 
+            /*
             logger.log(Level.INFO, ""
                     + " Thread." + Thread.currentThread().getName() + "." + Thread.currentThread().getId()
                     + " mappers.size() " + mappers.size()
             );
+            */
 
             return mappers;
         } catch (Exception e) {
