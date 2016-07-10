@@ -1,11 +1,8 @@
 package com.workday;
 
 
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
 import static org.junit.Assert.*;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 
@@ -134,14 +131,10 @@ public class RangeQueryBasicTest {
     }
 
 
-    @Test
+    //@Test
     public void miniStressTestMapReduceLinearSimpleData() {
-        System.out.println("miniStressTestMapReduceLinearSimpleData: ");
-
         int runs = 10;
-        long[] data;
-
-        data = new long[32000];
+        long[] data = new long[32000];
         for (int i = 0; i < data.length; i++) {
             data[i] = 1;
             // set 0,8000,16000,24000 to 100
@@ -154,7 +147,7 @@ public class RangeQueryBasicTest {
         RangeContainer rcd = rfd.createContainer(data, RangeContainerStrategy.MapReduceLinear);
 
         // run N times, find items between 99 and 101
-        Ids ids = miniStressTest(rcd, runs, 99, 101);
+        Ids ids = miniStressTest(rcd, runs, 99, 101, "miniStressTestMapReduceLinearSimpleData");
         assertEquals(0, ids.nextId());
         assertEquals(8000, ids.nextId());
         assertEquals(16000, ids.nextId());
@@ -162,7 +155,7 @@ public class RangeQueryBasicTest {
         assertEquals(Ids.END_OF_IDS, ids.nextId());
 
         // run N times, find items between 0 and 2
-        ids = miniStressTest(rcd, runs, 0, 2);
+        ids = miniStressTest(rcd, runs, 0, 2, "miniStressTestMapReduceLinearSimpleData");
         for (int i = 0; i < 32000; i++) {
             if (i%8000 == 0) {
                 continue;
@@ -173,14 +166,10 @@ public class RangeQueryBasicTest {
         assertEquals(Ids.END_OF_IDS, ids.nextId());
     }
 
-    @Test
+    //@Test
     public void miniStressTestMapReduceLogarithmicSimpleData() {
-        System.out.println("miniStressTestMapReduceLogarithmicSimpleData: ");
-
         int runs = 10;
-        long[] data;
-
-        data = new long[32000];
+        long[] data = new long[32000];
         for (int i = 0; i < data.length; i++) {
             data[i] = 1;
             // set 0,8000,16000,24000 to 100
@@ -193,7 +182,7 @@ public class RangeQueryBasicTest {
         RangeContainer rcd = rfd.createContainer(data, RangeContainerStrategy.MapReduceLogarithmic);
 
         // run N times, find items between 99 and 101
-        Ids ids = miniStressTest(rcd, runs, 99, 101);
+        Ids ids = miniStressTest(rcd, runs, 99, 101, "miniStressTestMapReduceLogarithmicSimpleData");
         assertEquals(0, ids.nextId());
         assertEquals(8000, ids.nextId());
         assertEquals(16000, ids.nextId());
@@ -201,7 +190,7 @@ public class RangeQueryBasicTest {
         assertEquals(Ids.END_OF_IDS, ids.nextId());
 
         // run N times, find items between 0 and 2
-        ids = miniStressTest(rcd, runs, 0, 2);
+        ids = miniStressTest(rcd, runs, 0, 2, "miniStressTestMapReduceLogarithmicSimpleData");
         for (int i = 0; i < 32000; i++) {
             if (i%8000 == 0) {
                 continue;
@@ -212,56 +201,9 @@ public class RangeQueryBasicTest {
         assertEquals(Ids.END_OF_IDS, ids.nextId());
     }
 
-    @Test
-    public void miniStressTestMapReduceLinearRandomData() {
-        System.out.println("miniStressTestMapReduceLinearRandomData: ");
-
-        int runs = 1000;
-        long[] data;
-
-        data = new long[32000];
-        for (int i = 0; i < data.length; i++) {
-            // get a random num between 99 and 9999
-            data[i] = (long) (int)(Math.random() * ((9999 - 99) + 1)) + 99;
-        }
-
-        RangeContainerFactoryDynamic rfd = new RangeContainerFactoryDynamicImpl();
-        RangeContainer rcd = rfd.createContainer(data, RangeContainerStrategy.MapReduceLinear);
-
-        // run N times, find items between 99 and 101
-        Ids ids = miniStressTest(rcd, runs, 99, 9999);
-        for (int i = 0; i < 32000; i++) {
-            assertEquals(i, ids.nextId());
-        }
-        assertEquals(Ids.END_OF_IDS, ids.nextId());
-    }
-
-    @Test
-    public void miniStressTestMapReduceLogarithmicRandomData() {
-        System.out.println("miniStressTestMapReduceLogarithmicRandomData: ");
-
-        int runs = 1000;
-        long[] data;
-
-        data = new long[32000];
-        for (int i = 0; i < data.length; i++) {
-            // get a random num between 99 and 9999
-            data[i] = (long) (int)(Math.random() * ((9999 - 99) + 1)) + 99;
-        }
-
-        RangeContainerFactoryDynamic rfd = new RangeContainerFactoryDynamicImpl();
-        RangeContainer rcd = rfd.createContainer(data, RangeContainerStrategy.MapReduceLogarithmic);
-
-        // run N times, find items between 99 and 101
-        Ids ids = miniStressTest(rcd, runs, 99, 9999);
-        for (int i = 0; i < 32000; i++) {
-            assertEquals(i, ids.nextId());
-        }
-        assertEquals(Ids.END_OF_IDS, ids.nextId());
-    }
-
-
-    private Ids miniStressTest(RangeContainer rc, int runs, long fromValue, long toValue) {
+    // TODO: obsolete method, remove this method after the dependencies move out,
+    // now we have a rangeContainerStressTester to do these tests
+    private Ids miniStressTest(RangeContainer rc, int runs, long fromValue, long toValue, String logMsg) {
         Ids ids = null;
         double time = 0;
         for (int i = 1; i <= runs; i++) {
@@ -271,8 +213,95 @@ public class RangeQueryBasicTest {
             time += estimatedTime;
         }
 
-        System.out.println("No. of Runs: " + runs + ", Avg Time Per Run (millisecs): " + time/runs);
+        System.out.println(logMsg + ", RT(ms)==" + time/runs);
         return ids;
+    }
+
+    @Test
+    public void miniStressTestMapReduceLinearRandomData() {
+        int runs = 1000;
+        long dataRangeMin = 99, dataRangeMax = 9999;
+        long queryRangeMin = 99, queryRangeMax = 9999;
+        Ids ids;
+
+        rangeContainerStressTester tester = new rangeContainerStressTester(dataRangeMin, dataRangeMax,
+                RangeContainerStrategy.MapReduceLinear);
+        ids = tester.run(runs, queryRangeMin, queryRangeMax);
+        for (int i = 0; i < 32000; i++) {
+            assertEquals(i, ids.nextId());
+        }
+        assertEquals(Ids.END_OF_IDS, ids.nextId());
+
+        // test for out of range queries
+        ids = tester.run(runs, 1, 98);
+        assertEquals(Ids.END_OF_IDS, ids.nextId());
+    }
+
+    @Test
+    public void miniStressTestMapReduceLogarithmicRandomData() {
+        int runs = 1000;
+        long dataRangeMin = 99, dataRangeMax = 9999;
+        long queryRangeMin = 99, queryRangeMax = 9999;
+        Ids ids;
+
+        rangeContainerStressTester tester = new rangeContainerStressTester(dataRangeMin, dataRangeMax,
+                                                                        RangeContainerStrategy.MapReduceLogarithmic);
+        ids = tester.run(runs, queryRangeMin, queryRangeMax);
+        for (int i = 0; i < 32000; i++) {
+            assertEquals(i, ids.nextId());
+        }
+        assertEquals(Ids.END_OF_IDS, ids.nextId());
+
+        // test for out of range queries
+        ids = tester.run(runs, 1, 98);
+        assertEquals(Ids.END_OF_IDS, ids.nextId());
+    }
+
+    private class rangeContainerStressTester {
+        long[] data = new long[32000];
+        long dataRangeMin, dataRangeMax;
+        RangeContainer rcd;
+        RangeContainerStrategy strategy;
+
+        public rangeContainerStressTester(long dataRangeMin, long dataRangeMax, RangeContainerStrategy strategy) {
+
+            this.dataRangeMin = dataRangeMin;
+            this.dataRangeMax = dataRangeMax;
+            this.strategy = strategy;
+
+            // create data[] with items in the given range
+            for (int i = 0; i < data.length; i++) {
+                // get a random num between 99 and 9999
+                data[i] = (long) (int)(Math.random() * ((dataRangeMax - dataRangeMin) + 1)) + dataRangeMin;
+            }
+
+            // create the RangeContainer object for the given strategy
+            RangeContainerFactoryDynamic rfd = new RangeContainerFactoryDynamicImpl();
+            rcd = rfd.createContainer(data, strategy);
+        }
+
+        public Ids run(int runs, long queryRangeMin, long queryRangeMax) {
+            Ids ids = null;
+            double time = 0;
+            for (int i = 1; i <= runs; i++) {
+                long startTime = System.currentTimeMillis();
+                ids = rcd.findIdsInRange(queryRangeMin, queryRangeMax, true, true);
+                long estimatedTime = System.currentTimeMillis() - startTime;
+                time += estimatedTime;
+            }
+
+            String logMsg = this.toString()
+                    + " QueryRange==" + queryRangeMin + "," + queryRangeMax
+                    + " Runs==" + runs;
+
+            System.out.println(logMsg + ", RT(ms)==" + time/runs);
+            return ids;
+        }
+
+        @Override
+        public String toString() {
+            return new String("Strategy==" + strategy + " DataRange==" + dataRangeMin + "," + dataRangeMax);
+        }
     }
 
 }

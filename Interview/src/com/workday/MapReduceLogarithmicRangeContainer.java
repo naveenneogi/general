@@ -16,7 +16,8 @@ public class MapReduceLogarithmicRangeContainer extends MapReduceRangeContainer 
 
     // data size for each mapper to deal with, for logarithmic mapreduce, we will have 3200
     // other types of mapR may choose different size to facilitate their specific insert/search ops
-    protected static final short MAPPER_DATA_SIZE = 3200;
+    protected static final short MAPPER_DATA_SIZE = 8000;
+    //protected static final short MAPPER_DATA_SIZE = Short.MAX_VALUE;
 
     public MapReduceLogarithmicRangeContainer(long[] data) {
         super(data);
