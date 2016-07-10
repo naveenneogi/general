@@ -47,3 +47,24 @@ The search operation within each Mapper itself can be implemented in multiple wa
 depending on the internal data structure we end up using - arrays, skiplists, treemaps, treaps, etc
 Likewise, we can have different extensions to MapReduceRangeContainer depending on the internal data structures
 these extensions use, for eg: MapReduceLinear, MapReduceLogarithmic
+
+And a bit more stress test analysis of the two MapReduce algorithms:
+Threads==1 	Strategy==MapReduceLinear DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==1.399
+Threads==4	Strategy==MapReduceLinear DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==1.404
+Threads==10 Strategy==MapReduceLinear DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==1.591
+Threads==20 Strategy==MapReduceLinear DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==2.405
+
+Threads==1 	Strategy==MapReduceLinear DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.194
+Threads==4	Strategy==MapReduceLinear DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.358
+Threads==10 Strategy==MapReduceLinear DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.614
+Threads==20 Strategy==MapReduceLinear DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==1.016
+
+Threads==1 	Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==6.57
+Threads==4	Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==2.512
+Threads==10 Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==2.86
+Threads==20 Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==2.801
+
+Threads==1 	Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.091
+Threads==4	Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.267
+Threads==10 Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.57
+Threads==20 Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==1.077
