@@ -29,13 +29,31 @@ public class MapperLinear implements Mapper {
 
     // data that this mapper is dealing with: stored as an array and supports linear search
     long[] dataSubset;
+    // keep track of the min & max while initiating the dataSubset
+    // failfast: if the range being asked for is below the min OR above the max of our data
+    long min, max;
 
     public MapperLinear(long[] data, int beginMapperOffset, int endMapperOffset) {
         logger.setLevel(SEVERE);
 
         this.beginMapperOffset = beginMapperOffset;
         this.endMapperOffset = endMapperOffset;
-        this.dataSubset = copyOfRange(data, beginMapperOffset, endMapperOffset);
+        try {
+            //this.dataSubset = Arrays.copyOfRange(data, beginMapperOffset, endMapperOffset);
+            dataSubset = new long[data.length];
+            int j = -1;
+            for (int i=beginMapperOffset; i<endMapperOffset; i++) {
+                long item = data[i];
+                this.dataSubset[++j] = item;
+                // keep track of the min & max while copying the subarray
+                if (item < this.min) this.min = item;
+                else if (item > this.max) this.max = item;
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.getMessage());
+        } finally {
+            // any specific final cleanups?
+        }
     }
 
     /**
@@ -48,7 +66,13 @@ public class MapperLinear implements Mapper {
      * @return
      */
     public List<Short> findIdsInRange(long fromValue, long toValue, boolean fromInclusive, boolean toInclusive) {
+
         List<Short> idList = new LinkedList<>();
+
+        //failfast: if the range being asked for is below the min OR above the max of our data, return
+        if (fromValue < this.min && toValue < this.min) return idList;
+        if (fromValue > this.max && toValue > this.max) return idList;
+
         for (short i = 0; i < dataSubset.length; i++) {
             if (inRange(dataSubset[i], fromValue, toValue, fromInclusive, toInclusive)) {
                 short id = (short) (beginMapperOffset + i);
