@@ -69,9 +69,16 @@ public class MapperLinear implements Mapper {
 
         List<Short> idList = new LinkedList<>();
 
+        // validate input condition
+        if (fromValue > toValue || (fromValue == toValue && fromInclusive != toInclusive)
+                || (fromValue == toValue && fromInclusive == false && toInclusive == false)) {
+            return idList;
+        }
+
         //failfast: if the range being asked for is below the min OR above the max of our data, return
         if (fromValue < this.min && toValue < this.min) return idList;
         if (fromValue > this.max && toValue > this.max) return idList;
+
 
         for (short i = 0; i < dataSubset.length; i++) {
             if (inRange(dataSubset[i], fromValue, toValue, fromInclusive, toInclusive)) {

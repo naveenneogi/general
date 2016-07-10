@@ -87,6 +87,24 @@ public class RangeQueryBasicTest {
         assertEquals(6, ids.nextId());
         assertEquals(7, ids.nextId());
         assertEquals(Ids.END_OF_IDS, ids.nextId());
+
+        // testing TreeMap
+        rcd = rfd.createContainer(data, RangeContainerStrategy.TreeMap);
+        ids = rcd.findIdsInRange(14, 17, true, true);
+        // should return index: 2,5,6,7,8
+
+        assertEquals(2, ids.nextId());
+        assertEquals(5, ids.nextId());
+        assertEquals(6, ids.nextId());
+        assertEquals(7, ids.nextId());
+        assertEquals(8, ids.nextId());
+        assertEquals(Ids.END_OF_IDS, ids.nextId());
+
+        ids = rcd.findIdsInRange(14, 17, true, false);
+        assertEquals(5, ids.nextId());
+        assertEquals(6, ids.nextId());
+        assertEquals(7, ids.nextId());
+        assertEquals(Ids.END_OF_IDS, ids.nextId());
     }
 
 
@@ -246,6 +264,26 @@ public class RangeQueryBasicTest {
 
         rangeContainerStressTester tester = new rangeContainerStressTester(dataRangeMin, dataRangeMax,
                                                                         RangeContainerStrategy.MapReduceLogarithmic);
+        ids = tester.run(runs, queryRangeMin, queryRangeMax);
+        for (int i = 0; i < 32000; i++) {
+            assertEquals(i, ids.nextId());
+        }
+        assertEquals(Ids.END_OF_IDS, ids.nextId());
+
+        // test for out of range queries
+        ids = tester.run(runs, 1, 98);
+        assertEquals(Ids.END_OF_IDS, ids.nextId());
+    }
+
+    @Test
+    public void miniStressTestTreeMapRandomData() {
+        int runs = 1000;
+        long dataRangeMin = 99, dataRangeMax = 9999;
+        long queryRangeMin = 99, queryRangeMax = 9999;
+        Ids ids;
+
+        rangeContainerStressTester tester = new rangeContainerStressTester(dataRangeMin, dataRangeMax,
+                RangeContainerStrategy.TreeMap);
         ids = tester.run(runs, queryRangeMin, queryRangeMax);
         for (int i = 0; i < 32000; i++) {
             assertEquals(i, ids.nextId());

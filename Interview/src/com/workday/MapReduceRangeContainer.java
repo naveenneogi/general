@@ -107,7 +107,7 @@ public abstract class MapReduceRangeContainer implements RangeContainer, MapperC
      * query on each thread before merging the results.
      */
     public Ids findIdsInRange(long fromValue, long toValue, boolean fromInclusive, boolean toInclusive) {
-        List<Short> idsList = reduce(fromValue, toValue, fromInclusive, toInclusive);
-        return new IdsImpl(idsList);
+        List<Short> idList = reduce(fromValue, toValue, fromInclusive, toInclusive);
+        return new IdsImpl(idList);
     }
 }

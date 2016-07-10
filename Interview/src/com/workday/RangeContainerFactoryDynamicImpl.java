@@ -28,6 +28,9 @@ public class RangeContainerFactoryDynamicImpl implements RangeContainerFactoryDy
             if (strategy.equals(RangeContainerStrategy.MapReduceLogarithmic)) {
                 return new MapReduceLogarithmicRangeContainer(data);
             }
+            if (strategy.equals(RangeContainerStrategy.TreeMap)) {
+                return new TreeMapRangeContainer(data);
+            }
 
 
         } catch (Exception e) {

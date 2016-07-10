@@ -8,5 +8,5 @@ package com.workday;
  *
  */
 public enum RangeContainerStrategy {
-    MapReduceLinear, MapReduceLogarithmic, TreeBased;
+    MapReduceLinear, MapReduceLogarithmic, BinarySearch, TreeMap;
 }

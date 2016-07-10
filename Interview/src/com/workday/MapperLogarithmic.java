@@ -59,9 +59,21 @@ public class MapperLogarithmic implements Mapper {
      */
     public List<Short> findIdsInRange(long fromValue, long toValue,	boolean fromInclusive, boolean toInclusive) {
 
+        List<Short> idList = new LinkedList<>();
+
+        // validate input condition
+        if (fromValue > toValue || (fromValue == toValue && fromInclusive != toInclusive)
+                || (fromValue == toValue && fromInclusive == false && toInclusive == false)) {
+            return idList;
+        }
+
+        if (reverseIndexDataToId == null ||  reverseIndexDataToId.isEmpty() || reverseIndexDataToId.size() == 0) {
+            return idList;
+        }
+
         ConcurrentNavigableMap<Long, List<Short>> idsRange = reverseIndexDataToId.subMap(fromValue, fromInclusive, toValue, toInclusive);
         List<List<Short>> idMultiList = new ArrayList<>(idsRange.values());
-        List<Short> idList = idMultiList.stream().flatMap(l -> l.stream()).collect(Collectors.toList());
+        idList = idMultiList.stream().flatMap(l -> l.stream()).collect(Collectors.toList());
         Collections.sort(idList);
 
         logger.log(Level.INFO, ""
