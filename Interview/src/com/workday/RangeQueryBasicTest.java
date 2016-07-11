@@ -253,6 +253,9 @@ public class RangeQueryBasicTest {
         // test for out of range queries
         ids = tester.run(runs, 1, 98);
         assertEquals(Ids.END_OF_IDS, ids.nextId());
+
+        // test for half inrange, half out of range queries
+        ids = tester.run(runs, 4999, 14999);
     }
 
     @Test
@@ -273,6 +276,9 @@ public class RangeQueryBasicTest {
         // test for out of range queries
         ids = tester.run(runs, 1, 98);
         assertEquals(Ids.END_OF_IDS, ids.nextId());
+
+        // test for half inrange, half out of range queries
+        ids = tester.run(runs, 4999, 14999);
     }
 
     @Test
@@ -293,6 +299,9 @@ public class RangeQueryBasicTest {
         // test for out of range queries
         ids = tester.run(runs, 1, 98);
         assertEquals(Ids.END_OF_IDS, ids.nextId());
+
+        // test for half inrange, half out of range queries
+        ids = tester.run(runs, 4999, 14999);
     }
 
     private class rangeContainerStressTester {
@@ -328,17 +337,15 @@ public class RangeQueryBasicTest {
                 time += estimatedTime;
             }
 
-            String logMsg = this.toString()
-                    + " QueryRange==" + queryRangeMin + "," + queryRangeMax
-                    + " Runs==" + runs;
+            StringBuilder str = new StringBuilder();
+            str.append("Strategy==").append(strategy)
+                .append(" DataRange==").append(dataRangeMin).append(",").append(dataRangeMax)
+                .append(" QueryRange==").append(queryRangeMin).append(",").append(queryRangeMax)
+                .append(" Runs==").append(runs)
+                .append(" RT(ms)==").append(time/runs);
 
-            System.out.println(logMsg + ", RT(ms)==" + time/runs);
+            System.out.println(str.toString());
             return ids;
-        }
-
-        @Override
-        public String toString() {
-            return new String("Strategy==" + strategy + " DataRange==" + dataRangeMin + "," + dataRangeMax);
         }
     }
 

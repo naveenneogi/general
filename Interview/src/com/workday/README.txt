@@ -22,16 +22,6 @@ MapReduceLogarithmic
 TreeMap
 BinarySearch
 
-Summary of the mini stress tests:
-Threads==4	Strategy==MapReduceLinear DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==1.404
-Threads==4	Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==2.512
-Threads==NA	Strategy==TreeMap DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==6.033
-
-Threads==4	Strategy==MapReduceLinear DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.358
-Threads==4	Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.267
-Threads==NA	Strategy==TreeMap DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.003
-
-
 A bit more about the MapReduce algorithm:
 
 The MapReduceRangeContainer implements a Map-Reduce algorithm to partition data across few mappers.
@@ -48,23 +38,62 @@ depending on the internal data structure we end up using - arrays, skiplists, tr
 Likewise, we can have different extensions to MapReduceRangeContainer depending on the internal data structures
 these extensions use, for eg: MapReduceLinear, MapReduceLogarithmic
 
-And a bit more stress test analysis of the two MapReduce algorithms:
-Threads==1 	Strategy==MapReduceLinear DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==1.399
-Threads==4	Strategy==MapReduceLinear DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==1.404
-Threads==10 Strategy==MapReduceLinear DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==1.591
-Threads==20 Strategy==MapReduceLinear DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==2.405
 
-Threads==1 	Strategy==MapReduceLinear DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.194
-Threads==4	Strategy==MapReduceLinear DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.358
-Threads==10 Strategy==MapReduceLinear DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.614
-Threads==20 Strategy==MapReduceLinear DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==1.016
+Summary of the mini stress tests:
+DataRange==99,9999 QueryRange==99,9999 Runs==1000
+	Threads==1
+		Strategy==TreeMap , RT(ms)==6.042
+		Strategy==MapReduceLinear , RT(ms)==1.076
+		Strategy==MapReduceLogarithmic , RT(ms)==6.922
+	Threads==4
+		Strategy==TreeMap , RT(ms)==6.01
+		Strategy==MapReduceLinear , RT(ms)==1.119
+		Strategy==MapReduceLogarithmic , RT(ms)==2.609
+	Threads==10
+		Strategy==TreeMap  RT(ms)==6.181
+		Strategy==MapReduceLinear RT(ms)==1.649
+		Strategy==MapReduceLogarithmic RT(ms)==2.413
+	Threads==20
+		Strategy==TreeMap  RT(ms)==6.108
+		Strategy==MapReduceLinear RT(ms)==2.252
+		Strategy==MapReduceLogarithmic RT(ms)==2.737
 
-Threads==1 	Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==6.57
-Threads==4	Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==2.512
-Threads==10 Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==2.86
-Threads==20 Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==99,9999 Runs==1000, RT(ms)==2.801
 
-Threads==1 	Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.091
-Threads==4	Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.267
-Threads==10 Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==0.57
-Threads==20 Strategy==MapReduceLogarithmic DataRange==99,9999 QueryRange==1,98 Runs==1000, RT(ms)==1.077
+
+DataRange==99,9999 QueryRange==4999,14999 Runs==1000
+	Threads==1
+		Strategy==TreeMap RT(ms)==2.739
+		Strategy==MapReduceLinear RT(ms)==0.845
+		Strategy==MapReduceLogarithmic RT(ms)==3.266
+	Threads==4
+		Strategy==TreeMap RT(ms)==2.654
+		Strategy==MapReduceLinear RT(ms)==0.7
+		Strategy==MapReduceLogarithmic RT(ms)==1.265
+	Threads==10
+		Strategy==TreeMap RT(ms)==2.806
+		Strategy==MapReduceLinear RT(ms)==1.316
+		Strategy==MapReduceLogarithmic RT(ms)==1.399
+	Threads==20
+		Strategy==TreeMap RT(ms)==2.652
+		Strategy==MapReduceLinear RT(ms)==1.52
+		Strategy==MapReduceLogarithmic RT(ms)==1.882
+
+
+
+DataRange==99,9999 QueryRange==1,98 Runs==1000
+	Threads==1
+		Strategy==TreeMap , RT(ms)==0.003
+		Strategy==MapReduceLinear , RT(ms)==0.212
+		Strategy==MapReduceLogarithmic , RT(ms)==0.206
+	Threads==4
+		Strategy==TreeMap , RT(ms)==0.002
+		Strategy==MapReduceLinear , RT(ms)==0.46
+		Strategy==MapReduceLogarithmic , RT(ms)==0.294
+	Threads==10
+		Strategy==TreeMap RT(ms)==0.003
+		Strategy==MapReduceLinear RT(ms)==0.684
+		Strategy==MapReduceLogarithmic RT(ms)==0.656
+	Threads==20
+		Strategy==TreeMap RT(ms)==0.003
+		Strategy==MapReduceLinear RT(ms)==1.116
+		Strategy==MapReduceLogarithmic RT(ms)==1.172

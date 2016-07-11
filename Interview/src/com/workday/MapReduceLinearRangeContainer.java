@@ -22,7 +22,7 @@ public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
 
     // data size for each mapper to deal with, for linear mapreduce, we will have 3200
     // other types of mapR may choose different size to facilitate their specific insert/search ops
-    protected static final short MAPPER_DATA_SIZE = 8000;
+    protected static final short MAPPER_DATA_SIZE = 32000;
     //protected static final short MAPPER_DATA_SIZE = Short.MAX_VALUE;
 
     public MapReduceLinearRangeContainer(long[] data) {
