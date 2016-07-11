@@ -15,7 +15,7 @@ few such data structures but in addition also breaks the problem down into a 'Di
 a mini stress test of all the algorithms considered.
 
 5. Synchronization/Locking: I have deliberately left out synchronization/locking issues since one of the
-patterns I am designing for is for this system to be ready heavy while insertions happening infrequently.
+patterns I am designing for is for this system to be read/query heavy with insertions happening infrequently.
 So, I do not want penalize the reads/queries by introducing synch/lock patterns. Of note, however, is that
 the skipList implementation of mapR is indeed ConcurrentSkipLists, but its usage here does not cause any
 locking/starvation since each thread has its own ConcurrentSkipLists and not shared across.
