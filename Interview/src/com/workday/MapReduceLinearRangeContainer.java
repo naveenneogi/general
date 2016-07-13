@@ -16,19 +16,28 @@ import static java.util.logging.Level.SEVERE;
  * implemented within the base class
  *
  */
-public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
+public class MapReduceLinearRangeContainer implements RangeContainer {
 
     private final static Logger logger = Logger.getLogger(MapReduceLinearRangeContainer.class.getName());
 
     // data size for each mapper to deal with, for linear mapreduce, we will have 3200
     // other types of mapR may choose different size to facilitate their specific insert/search ops
-    protected static final short MAPPER_DATA_SIZE = 32000;
+    protected static final short MAPPER_DATA_SIZE = 8000;
     //protected static final short MAPPER_DATA_SIZE = Short.MAX_VALUE;
 
+    List<Mapper> mapperList;
+
     public MapReduceLinearRangeContainer(long[] data) {
-        super(data);
         logger.setLevel(SEVERE);
+
+        if (data == null || data.length > 32000 || data.length == 0) {
+            throw new IllegalArgumentException("RangeContainer invalid data passed: data size to be within 1-32k");
+        }
+        // partition the data across 'few' mappers
+        // also expect the different implementations of MapReduceRangeContainer to implement their specific createMappers
+        mapperList = createMappers(data);
     }
+
 
     /**
      *
@@ -69,4 +78,15 @@ public class MapReduceLinearRangeContainer extends MapReduceRangeContainer {
         }
         return null;
     }
+
+
+    /**
+     * Calls the reduce method which creates as many threads as mappers and invokes the range
+     * query on each thread before merging the results.
+     */
+    public Ids findIdsInRange(long fromValue, long toValue, boolean fromInclusive, boolean toInclusive) {
+        List<Short> idList = MapReduceRangeContainerUtil.reduce(mapperList, fromValue, toValue, fromInclusive, toInclusive);
+        return new IdsImpl(idList);
+    }
+
 }

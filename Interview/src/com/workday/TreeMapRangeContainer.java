@@ -13,7 +13,7 @@ import static java.util.logging.Level.SEVERE;
  * Created by naveenmurthy on 7/10/16.
  */
 public class TreeMapRangeContainer implements RangeContainer {
-    private final static Logger logger = Logger.getLogger(MapReduceRangeContainer.class.getName());
+    private final static Logger logger = Logger.getLogger(TreeMapRangeContainer.class.getName());
 
     private final NavigableMap<Long, List<Short>> reverseIndexDataToId = new TreeMap<>();
 
