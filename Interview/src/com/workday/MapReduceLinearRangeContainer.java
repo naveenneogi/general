@@ -11,7 +11,9 @@ import static java.util.logging.Level.SEVERE;
 /**
  * Created by naveenmurthy on 7/6/16.
  *
- * this is a linear search implentation of the MapReduceRangeContainer
+ * TODO: MapReduceRangeContainerFactory could own the creation of Linear, Logarithmic, etc variations
+ *
+ * this is a linear search implementation of the MapReduceRangeContainer
  * as such this is also forced to implement all the interfaces the MapReduceRangeContainer depends on if not already
  * implemented within the base class
  *

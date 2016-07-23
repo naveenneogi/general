@@ -30,7 +30,6 @@ public class MapperLogarithmic implements Mapper {
     private final static Logger logger = Logger.getLogger(MapperLogarithmic.class.getName());
 
     // data that this mapper is dealing with: stored as a skipList and supports log(n) search
-    // TODO: <Long, List<Short>> ?
     private ConcurrentSkipListMap<Long, List<Short>> reverseIndexDataToId = new ConcurrentSkipListMap<>();
 
     public MapperLogarithmic(long[] data, int beginMapperOffset, int endMapperOffset) {
@@ -71,6 +70,8 @@ public class MapperLogarithmic implements Mapper {
             return idList;
         }
 
+
+        // TODO: optimize for reads, figure out stream & sort
         ConcurrentNavigableMap<Long, List<Short>> idsRange = reverseIndexDataToId.subMap(fromValue, fromInclusive, toValue, toInclusive);
         List<List<Short>> idMultiList = new ArrayList<>(idsRange.values());
         idList = idMultiList.stream().flatMap(l -> l.stream()).collect(Collectors.toList());

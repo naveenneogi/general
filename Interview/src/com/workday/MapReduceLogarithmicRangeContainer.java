@@ -9,6 +9,9 @@ import static java.util.logging.Level.SEVERE;
 
 /**
  * Created by naveenmurthy on 7/8/16.
+ *
+ * TODO: MapReduceRangeContainerFactory could own the creation of Linear, Logarithmic, etc variations
+ *
  */
 public class MapReduceLogarithmicRangeContainer implements RangeContainer {
 

@@ -29,6 +29,8 @@ public class MapReduceRangeContainerUtil {
                                boolean fromInclusive, boolean toInclusive) {
 
         logger.setLevel(SEVERE);
+
+        // TODO: what if no threds or fewer threads, degrade smartly, worst case calling thread does all the reduce
         ExecutorService executor = Executors.newFixedThreadPool(mapperList.size());
         List<Callable<List<Short>>> reducers = new LinkedList<>();
         for (Mapper mapper : mapperList) {
@@ -51,7 +53,9 @@ public class MapReduceRangeContainerUtil {
             // any specific final cleanups?
             executor.shutdown();
         }
+
         // Wait until all threads are done
+        // TODO: what if threads just make you wait forever
         while (!executor.isTerminated()) {}
 
         // the results are in the same order in which they were added to the executor service.
