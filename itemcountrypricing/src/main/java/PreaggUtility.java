@@ -30,16 +30,29 @@ public class PreaggUtility {
         return instance;
     }
 
-    public void init() {
-        processItemsDataFromFile();
-        System.out.println(itemCountryPricingMap);
+    public void init(String filename) {
+        processItemsDataFromFile(filename);
+        //System.out.println(itemCountryPricingMap);
+    }
+
+    public String getItemCountryPricing(String item) {
+        if (StringUtils.isEmpty(item) || !validItemCode(item)) {
+            String str = "ERROR: Invalid item passed: " + item;
+            System.out.println(str);
+            return str;
+        }
+
+        if (itemCountryPricingMap.get(StringUtils.lowerCase(item)) != null) {
+            String countryPricingInfo = itemCountryPricingMap.get(item).toString();
+            return countryPricingInfo;
+        } else {
+            String str = "ERROR: countryPricingInfo NOT FOUND for the item passed: " + item;
+            System.out.println(str);
+            return str;
+        }
 
 
     }
-
-
-
-    private String filename = "/Users/nmurthy/Projects/github/project1/src/main/resources/items.csv";
 
     private class ItemCountryPricing {
         String item;
@@ -68,7 +81,7 @@ public class PreaggUtility {
 
     private ConcurrentHashMap<String, TreeSet<ItemCountryPricing>> itemCountryPricingMap = new ConcurrentHashMap<>();
 
-    private void processItemsDataFromFile() {
+    private void processItemsDataFromFile(String filename) {
         try {
             LineIterator it = FileUtils.lineIterator(new File(filename), "UTF-8");
             while (it.hasNext()) {
@@ -130,7 +143,7 @@ public class PreaggUtility {
     private void updateMapWithItemInfo(List<String> itemCountryPricingList) {
         //System.out.println(itemCountryPricingList);
         String country = itemCountryPricingList.get(0);
-        String item = itemCountryPricingList.get(1);
+        String item = StringUtils.lowerCase(itemCountryPricingList.get(1));
         Float price = Float.valueOf(itemCountryPricingList.get(2));
 
         if (itemCountryPricingMap.get(item) != null) {
